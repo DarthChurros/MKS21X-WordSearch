@@ -69,7 +69,7 @@ public class WordSearch {
    *or there are overlapping letters that do not match, then false is returned.
    *and the board is NOT modified.
    */
-   public boolean add(String word, int row, int col) {
+   public boolean addWordVertical(String word, int row, int col) {
      for (int i =  0; i < word.length(); i++) {
        if (data[row+i][col] != '_' && data[row+i][col] != word.charAt(i)) {
          return false;
