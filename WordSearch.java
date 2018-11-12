@@ -17,8 +17,20 @@ public class WordSearch {
     if (rows < 0 || cols < 0) {
       throw new IllegalArgumentException("WordSearch dimensions out of bounds!");
     }
+    try {
+      Scanner in = new Scanner(new File("words.txt"));
+      while (in.hasNext()) {
+        wordsToAdd.add(in.next());
+      }
+    } catch(FileNotFoundException e){
+      System.out.println("File not found: words.txt");
+      System.exit(1);
+    }
     data = new char[rows][cols];
     clear();
+    seed = 100;
+    randgen = new Random(seed);
+    addAllWords();
   }
 
   /**Set all values in the WordSearch to underscores'_'*/
@@ -27,6 +39,18 @@ public class WordSearch {
       for (int j = 0; j < data[i].length; j++) {
         data[i][j] = '_';
       }
+    }
+  }
+
+  private void addAllWords() {
+    while (!wordsToAdd.isEmpty()) {
+      String word = wordsToAdd.get(0);
+      boolean run =  true;
+      while (run) {
+       run = !addWord(word, randgen.nextInt(), randgen.nextInt(), randgen);
+     }
+      wordsAdded.add(word);
+      wordsToAdd.remove(word);
     }
   }
 
