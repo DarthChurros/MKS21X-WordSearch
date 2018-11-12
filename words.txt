@@ -1,0 +1,10 @@
+lightsaber
+jedi
+falcon
+skywalker
+tatooine
+vader
+deathstar
+empire
+republic
+yoda
