@@ -68,63 +68,18 @@ public class WordSearch {
    *        OR there are overlapping letters that do not match
    */
    private boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement) {
-     String reverse = "";
-     for (int i = word.length() - 1; i >= 0; i--) {
-       reverse += word.charAt(i);
+     if (row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length) {
+       return false;
      }
-     if (rowIncrement == 1 && colIncrement == 1) {
-       return addWordDiagonal(word, row, col);
-     }
-     if (rowIncrement == 0 && colIncrement == 1) {
-       return addWordHorizontal(word, row, col);
-     }
-     if (rowIncrement == 1 && colIncrement == 0) {
-       return addWordVertical(word, row, col);
-     }
-     if (rowIncrement == -1 && colIncrement == 0) {
-       return addWordVertical(reverse, row, col - word.length() + 1);
-     }
-     if (rowIncrement == 0 && colIncrement == -1) {
-       return addWordHorizontal(reverse, row - word.length() + 1, col);
-     }
-     if (rowIncrement == -1 && colIncrement == -1) {
-       return addWordDiagonal(reverse, row - word.length() + 1, col - word.length() + 1);
-     }
-     if (rowIncrement == 1 && colIncrement == -1) {
-       if (row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length || word.length() >= data.length) {
+     for (int i =  0; i < word.length(); i++) {
+       if (col + i >= data[i].length || data[row+i*rowIncrement][col+i*colIncrement] != '_' && data[row+i*rowIncrement][col+i*colIncrement] != word.charAt(i)) {
          return false;
        }
-       for (int i = 0; i < word.length(); i++) {
-         if (row + i >= data.length || data[row+i][col] != '_' && data[row+i][col] != word.charAt(i)) {
-           return false;
-         }
-         if (col - i >= data[i].length || data[row][col-i] != '_' && data[row][col+i] != word.charAt(i)) {
-           return false;
-         }
-       }
-       for (int i = 0; i < word.length(); i++) {
-         data[row+i][col-i] = word.charAt(i);
-       }
-       return true;
      }
-     if (rowIncrement == -1 && colIncrement == 1) {
-       if (row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length || word.length() >= data.length) {
-         return false;
-       }
-       for (int i = 0; i < word.length(); i++) {
-         if (row - i >= data.length || data[row-i][col] != '_' && data[row+i][col] != word.charAt(i)) {
-           return false;
-         }
-         if (col + i >= data[i].length || data[row][col+i] != '_' && data[row][col+i] != word.charAt(i)) {
-           return false;
-         }
-       }
-       for (int i = 0; i < word.length(); i++) {
-         data[row-i][col+i] = word.charAt(i);
-       }
-       return true;
+     for (int i =  0; i < word.length(); i++) {
+       data[row+i*rowIncrement][col+i*colIncrement] = word.charAt(i);
      }
-     return false;
+     return true;
    }
 
   /**Each row is a new line, there is a space between each letter
@@ -156,7 +111,6 @@ public class WordSearch {
    */
   public boolean addWordHorizontal(String word, int row, int col) {
     if (row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length) {
-      System.out.println("bad params");
       return false;
     }
     for (int i =  0; i < word.length(); i++) {
