@@ -13,22 +13,52 @@ public class WordSearch {
    *@param rows is the starting height of the WordSearch
    *@param cols is the starting width of the WordSearch
    */
-  public WordSearch(int rows, int cols) {
+
+   public WordSearch(int rows, int cols) {
+     this(rows, cols, "words.txt");
+   }
+
+   public WordSearch(int rows, int cols, String fileName) {
+     if (rows < 0 || cols < 0) {
+       throw new IllegalArgumentException("WordSearch dimensions out of bounds!");
+     }
+     wordsToAdd = new ArrayList<String>();
+     wordsAdded = new ArrayList<String>();
+     try {
+       Scanner in = new Scanner(new File(fileName));
+       while (in.hasNext()) {
+         String x = in.next();
+         wordsToAdd.add(x);
+       }
+     } catch(FileNotFoundException e){
+       System.out.println("File not found: " + fileName);
+       System.exit(1);
+     }
+     data = new char[rows][cols];
+     clear();
+     randgen = new Random();
+     addAllWords();
+   }
+
+  public WordSearch(int rows, int cols, int randSeed, String fileName) {
     if (rows < 0 || cols < 0) {
       throw new IllegalArgumentException("WordSearch dimensions out of bounds!");
     }
+    wordsToAdd = new ArrayList<String>();
+    wordsAdded = new ArrayList<String>();
     try {
-      Scanner in = new Scanner(new File("words.txt"));
+      Scanner in = new Scanner(new File(fileName));
       while (in.hasNext()) {
-        wordsToAdd.add(in.next());
+        String x = in.next();
+        wordsToAdd.add(x);
       }
     } catch(FileNotFoundException e){
-      System.out.println("File not found: words.txt");
+      System.out.println("File not found: " + fileName);
       System.exit(1);
     }
     data = new char[rows][cols];
     clear();
-    seed = 100;
+    seed = randSeed;
     randgen = new Random(seed);
     addAllWords();
   }
@@ -44,10 +74,19 @@ public class WordSearch {
 
   private void addAllWords() {
     while (!wordsToAdd.isEmpty()) {
+      int xDir = randgen.nextInt() % 2;
+      int yDir = randgen.nextInt() % 2;
+      boolean stop =  false;
       String word = wordsToAdd.get(0);
-      boolean run =  true;
-      while (run) {
-       run = !addWord(word, randgen.nextInt(), randgen.nextInt(), randgen);
+      while (!stop) {
+        int x = Math.abs(randgen.nextInt());
+        int y = Math.abs(randgen.nextInt());
+        //System.out.println("Attempting to add " + word + " to " + (x%data.length) + ", "+(y%data[0].length) +" with xDir="+xDir+",yDir="+yDir+"...");
+        stop = addWord(word, x % data.length, y % data[0].length, xDir, yDir);
+        if (xDir == 0 && yDir == 0) {
+          xDir = randgen.nextInt() % 2;
+          yDir = randgen.nextInt() % 2;
+        }
      }
       wordsAdded.add(word);
       wordsToAdd.remove(word);
@@ -68,15 +107,15 @@ public class WordSearch {
    *        OR there are overlapping letters that do not match
    */
    private boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement) {
-     if (row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length) {
+     if (rowIncrement == 0 && colIncrement == 0 || row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length) {
        return false;
      }
-     for (int i =  0; i < word.length(); i++) {
-       if (col + i >= data[i].length || data[row+i*rowIncrement][col+i*colIncrement] != '_' && data[row+i*rowIncrement][col+i*colIncrement] != word.charAt(i)) {
+     for (int i = 0; i < word.length(); i++) {
+       if (row+i*rowIncrement>=data.length||row+i*rowIncrement<0||col+i*colIncrement>=data[i].length||col+i*colIncrement<0||data[row+i*rowIncrement][col+i*colIncrement] != '_' && data[row+i*rowIncrement][col+i*colIncrement] != word.charAt(i)) {
          return false;
        }
      }
-     for (int i =  0; i < word.length(); i++) {
+     for (int i = 0; i < word.length(); i++) {
        data[row+i*rowIncrement][col+i*colIncrement] = word.charAt(i);
      }
      return true;
