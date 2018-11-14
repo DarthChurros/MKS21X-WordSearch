@@ -14,38 +14,14 @@ public class WordSearch {
    *@param cols is the starting width of the WordSearch
    */
 
-   public WordSearch(int rows, int cols) {
-     this(rows, cols, "words.txt");
-   }
-
-   public WordSearch(int rows, int cols, String fileName) {
-     if (rows < 0 || cols < 0) {
-       throw new IllegalArgumentException("WordSearch dimensions out of bounds!");
-     }
-     wordsToAdd = new ArrayList<String>();
-     wordsAdded = new ArrayList<String>();
-     try {
-       Scanner in = new Scanner(new File(fileName));
-       while (in.hasNext()) {
-         String x = in.next();
-         wordsToAdd.add(x);
-       }
-     } catch(FileNotFoundException e){
-       System.out.println("File not found: " + fileName);
-       System.exit(1);
-     }
-     data = new char[rows][cols];
-     clear();
-     randgen = new Random();
-     addAllWords();
-   }
-
   public WordSearch(int rows, int cols, int randSeed, String fileName) {
     if (rows < 0 || cols < 0) {
       throw new IllegalArgumentException("WordSearch dimensions out of bounds!");
     }
+    data = new char[rows][cols];
     wordsToAdd = new ArrayList<String>();
     wordsAdded = new ArrayList<String>();
+    clear();
     try {
       Scanner in = new Scanner(new File(fileName));
       while (in.hasNext()) {
@@ -56,8 +32,6 @@ public class WordSearch {
       System.out.println("File not found: " + fileName);
       System.exit(1);
     }
-    data = new char[rows][cols];
-    clear();
     seed = randSeed;
     randgen = new Random(seed);
     addAllWords();
@@ -74,6 +48,7 @@ public class WordSearch {
 
   private void addAllWords() {
     while (!wordsToAdd.isEmpty()) {
+      int tries = 0;
       int xDir = randgen.nextInt() % 2;
       int yDir = randgen.nextInt() % 2;
       boolean stop =  false;
@@ -82,11 +57,12 @@ public class WordSearch {
         int x = Math.abs(randgen.nextInt());
         int y = Math.abs(randgen.nextInt());
         //System.out.println("Attempting to add " + word + " to " + (x%data.length) + ", "+(y%data[0].length) +" with xDir="+xDir+",yDir="+yDir+"...");
-        stop = addWord(word, x % data.length, y % data[0].length, xDir, yDir);
+        stop = addWord(word, x % data.length, y % data[0].length, xDir, yDir) || tries >= data.length * data[0].length;
         if (xDir == 0 && yDir == 0) {
           xDir = randgen.nextInt() % 2;
           yDir = randgen.nextInt() % 2;
         }
+        tries++;
      }
       wordsAdded.add(word);
       wordsToAdd.remove(word);
