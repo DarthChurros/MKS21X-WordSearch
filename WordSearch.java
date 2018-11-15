@@ -117,7 +117,7 @@ public class WordSearch {
     for (int i = 0; i < wordsAdded.size(); i++) {
       ans += wordsAdded.get(i) + ", ";
     }
-    ans += "\b\b (seed: " + randSeed + ")";
+    ans += "\b\b (seed: " + seed + ")";
     return ans;
   }
 
