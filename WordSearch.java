@@ -67,7 +67,9 @@ public class WordSearch {
         }
         tries++;
      }
+     if (tries < data.length * data[0].length) {
       wordsAdded.add(word);
+    }
       wordsToAdd.remove(word);
     }
   }
