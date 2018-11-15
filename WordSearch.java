@@ -113,6 +113,11 @@ public class WordSearch {
       }
       ans += "\b|\n";
     }
+    ans += "Words: ";
+    for (int i = 0; i < wordsAdded.size(); i++) {
+      ans += wordsAdded.get(i) + ", ";
+    }
+    ans += "\b\b (seed: " + randSeed + ")";
     return ans;
   }
 
@@ -129,6 +134,7 @@ public class WordSearch {
 
   public static void main(String[] args) {
     if (args.length == 4 || args.length == 5) {
+      int seed = (int)Math.random();
       WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),Integer.parseInt(args[2]),args[3],args.length == 5);
       System.out.println(WS);
     } else {
