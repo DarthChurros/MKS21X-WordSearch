@@ -135,12 +135,28 @@ public class WordSearch {
 
 
   public static void main(String[] args) {
-    if (args.length == 4 || args.length == 5) {
-      int seed = (int)Math.random();
-      WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),args.length == 5 && args[4].equals("key"));
-      System.out.println(WS);
-    } else {
-      System.out.println(args.length);
+    int seed = Math.abs((int)Math.random()) % 10001;
+    switch (args.length) {
+      case 3:
+        try {
+          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
+          System.out.println(WS);
+        } catch (IllegalArgumentException e) {
+          System.out.println("usage: [rows] [cols] [filename]");
+        }
+        break;
+      case 4:
+        try {
+          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]));
+          System.out.println(WS);
+        } catch (IllegalArgumentException e) {
+          System.out.println("usage: [rows] [cols] [filename] seed");
+        }
+        break;
+      case 5:
+        WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),args[4].equals("key"));
+        System.out.println(WS);
+        break;
     }
   }
 }
