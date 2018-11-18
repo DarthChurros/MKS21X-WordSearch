@@ -52,18 +52,18 @@ public class WordSearch {
   private void addAllWords() {
     while (!wordsToAdd.isEmpty()) {
       int tries = 0;
-      int xDir = randgen.nextInt() % 2;
-      int yDir = randgen.nextInt() % 2;
+      int xDir = randgen.nextInt(2);
+      int yDir = randgen.nextInt(2);
       boolean stop =  false;
-      String word = wordsToAdd.get(0);
+      String word = wordsToAdd.get(randgen.nextInt(wordsToAdd.size()));
       while (!stop) {
-        int x = Math.abs(randgen.nextInt());
-        int y = Math.abs(randgen.nextInt());
+        int x = randgen.nextInt(data.length);
+        int y = randgen.nextInt(data[0].length);
         //System.out.println("Attempting to add " + word + " to " + (x%data.length) + ", "+(y%data[0].length) +" with xDir="+xDir+",yDir="+yDir+"...");
-        stop = addWord(word, x % data.length, y % data[0].length, xDir, yDir) || tries >= data.length * data[0].length;
+        stop = addWord(word, x, y, xDir, yDir) || tries >= data.length * data[0].length;
         if (xDir == 0 && yDir == 0) {
-          xDir = randgen.nextInt() % 2;
-          yDir = randgen.nextInt() % 2;
+          xDir = randgen.nextInt(2);
+          yDir = randgen.nextInt(2);
         }
         tries++;
      }
@@ -88,7 +88,7 @@ public class WordSearch {
    *        OR there are overlapping letters that do not match
    */
    private boolean addWord(String word, int row, int col, int rowIncrement, int colIncrement) {
-     if (rowIncrement == 0 && colIncrement == 0 || row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length) {
+     if (rowIncrement == 0 && colIncrement == 0 || row < 0 || row >= data.length || col < 0 || col >= data[0].length || word.length() >= data[0].length || word.length() >= data.length) {
        return false;
      }
      for (int i = 0; i < word.length(); i++) {
@@ -111,7 +111,11 @@ public class WordSearch {
     for (int i = 0; i < data.length; i++) {
       ans += "|";
       for (int j = 0; j < data[i].length; j++) {
-        ans += data[i][j] + " ";
+        if (data[i][j] == '_') {
+          ans += "  ";
+        } else {
+          ans += data[i][j] + " ";
+        }
       }
       ans += "\b|\n";
     }
@@ -139,7 +143,7 @@ public class WordSearch {
     switch (args.length) {
       case 3:
         try {
-          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2]);
+          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2], (int)Math.random(), false);
           System.out.println(WS);
         } catch (IllegalArgumentException e) {
           System.out.println("usage: [rows] [cols] [filename]");
@@ -147,16 +151,22 @@ public class WordSearch {
         break;
       case 4:
         try {
-          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]));
+          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]), false);
           System.out.println(WS);
         } catch (IllegalArgumentException e) {
-          System.out.println("usage: [rows] [cols] [filename] seed");
+          System.out.println("usage: [rows] [cols] [filename] [seed]");
         }
         break;
       case 5:
-        WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),args[4].equals("key"));
-        System.out.println(WS);
+        try {
+          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2],Integer.parseInt(args[3]),args[4].equals("key"));
+          System.out.println(WS);
+        } catch (IllegalArgumentException e) {
+          System.out.println("usage: [rows] [cols] [filename] [seed] [key]");
+        }
         break;
+      default:
+        System.out.println("You must include the puzzle's dimensions and words!");
     }
   }
 }
