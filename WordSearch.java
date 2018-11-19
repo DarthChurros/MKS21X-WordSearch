@@ -12,6 +12,10 @@ public class WordSearch {
    *and fill all of the positions with '_'
    *@param rows is the starting height of the WordSearch
    *@param cols is the starting width of the WordSearch
+   *@param fileName is the name of the file containing the word list
+   *@param randSeed is the seed for the random generation of the WordSearch
+   *@param key dictates whether the random letters should be omitted from the
+   *WordSearch
    */
 
   public WordSearch(int rows, int cols, String fileName, int randSeed, boolean key) {
@@ -49,6 +53,12 @@ public class WordSearch {
     }
   }
 
+  /**Attempts to add all words in wordsToAdd to the WordGrid. Each word
+   *is chosen at random and assigned a random direction and position. If the
+   *word cannot be added using addWord, another attempt is made with a
+   *different starting position. Once a number of tries equal to the number
+   *of possible starting positions has been made, the word is skipped.
+   */
   private void addAllWords() {
     while (!wordsToAdd.isEmpty()) {
       int tries = 0;
@@ -127,7 +137,7 @@ public class WordSearch {
     return ans;
   }
 
-  public void fillRandom() {
+  private void fillRandom() {
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data[i].length; j++) {
         if (data[i][j] == '_') {
