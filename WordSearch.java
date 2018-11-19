@@ -62,8 +62,8 @@ public class WordSearch {
   private void addAllWords() {
     while (!wordsToAdd.isEmpty()) {
       int tries = 0;
-      int xDir = randgen.nextInt(2);
-      int yDir = randgen.nextInt(2);
+      int xDir = randgen.nextInt(3) - 1;
+      int yDir = randgen.nextInt(3) - 1;
       boolean stop =  false;
       String word = wordsToAdd.get(randgen.nextInt(wordsToAdd.size()));
       while (!stop) {
@@ -72,8 +72,8 @@ public class WordSearch {
         //System.out.println("Attempting to add " + word + " to " + (x%data.length) + ", "+(y%data[0].length) +" with xDir="+xDir+",yDir="+yDir+"...");
         stop = addWord(word, x, y, xDir, yDir) || tries >= data.length * data[0].length;
         if (xDir == 0 && yDir == 0) {
-          xDir = randgen.nextInt(2);
-          yDir = randgen.nextInt(2);
+          xDir = randgen.nextInt(2) - 1;
+          yDir = randgen.nextInt(2) - 1;
         }
         tries++;
      }
