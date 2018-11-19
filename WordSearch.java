@@ -149,11 +149,10 @@ public class WordSearch {
 
 
   public static void main(String[] args) {
-    int seed = Math.abs((int)Math.random()) % 10001;
     switch (args.length) {
       case 3:
         try {
-          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2], (int)Math.random(), false);
+          WordSearch WS = new WordSearch(Integer.parseInt(args[0]),Integer.parseInt(args[1]),args[2], (int)(Math.random()*10000), false);
           System.out.println(WS);
         } catch (IllegalArgumentException e) {
           System.out.println("usage: [rows] [cols] [filename]");
