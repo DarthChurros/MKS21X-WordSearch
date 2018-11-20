@@ -60,8 +60,10 @@ public class WordSearch {
    *of possible starting positions has been made, the word is skipped.
    */
   private void addAllWords() {
-    while (!wordsToAdd.isEmpty()) {
-      int tries = 0;
+    boolean wordStop = false;
+    int wordTries = wordsToAdd.size() * 3;
+    while (!(wordStop || wordsToAdd.isEmpty())) {
+      int tries = data.length * data[0].length;
       int xDir = randgen.nextInt(3) - 1;
       int yDir = randgen.nextInt(3) - 1;
       boolean stop =  false;
@@ -70,17 +72,22 @@ public class WordSearch {
         int x = randgen.nextInt(data.length);
         int y = randgen.nextInt(data[0].length);
         //System.out.println("Attempting to add " + word + " to " + (x%data.length) + ", "+(y%data[0].length) +" with xDir="+xDir+",yDir="+yDir+"...");
-        stop = addWord(word, x, y, xDir, yDir) || tries >= data.length * data[0].length;
+        stop = addWord(word, x, y, xDir, yDir) || tries <= 0;
         if (xDir == 0 && yDir == 0) {
           xDir = randgen.nextInt(2) - 1;
           yDir = randgen.nextInt(2) - 1;
         }
-        tries++;
-     }
-     if (tries < data.length * data[0].length) {
-      wordsAdded.add(word);
-    }
-      wordsToAdd.remove(word);
+        tries--;
+      }
+      if (tries > 0) {
+        wordsAdded.add(word);
+        wordsToAdd.remove(word);
+      } else {
+        wordTries--;
+      }
+      if (wordTries <= 0) {
+        wordStop = true;
+      }
     }
   }
 
